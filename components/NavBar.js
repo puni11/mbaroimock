@@ -11,37 +11,39 @@ export default function Navbar() {
     <header className="container mx-auto flex justify-between items-center py-4 px-8 shadow-sm">
       {/* Brand Name */}
       <div className="text-2xl font-bold">
+        <Link href='/'>
         <span className="text-red-600">MBAROI</span>
         <span className="text-black"> Mock</span>
+        </Link>
       </div>
 
       {/* Navigation Menu */}
       <nav>
         <ul className="hidden md:flex gap-6 text-gray-700 font-medium">
           <li>
-            <a href="#" className="hover:text-blue-600">
+            <Link href="#" className="hover:text-blue-600">
               MBA Exam
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-600">
+            <Link href="#" className="hover:text-blue-600">
               Topic Wise
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-600">
+            <Link href="#" className="hover:text-blue-600">
               Previous Year Papers
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-600">
+            <Link href="#" className="hover:text-blue-600">
               About Us
-            </a>
+            </Link>
           </li>
           <li>
-            <a href="#" className="hover:text-blue-600">
+            <Link href="#" className="hover:text-blue-600">
               Resources
-            </a>
+            </Link>
           </li>
         </ul>
       </nav>

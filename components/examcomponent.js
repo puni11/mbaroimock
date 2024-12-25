@@ -1,8 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 export default function ExamComponent() {
+  const searchParams =useSearchParams()
+  const mockId = searchParams.get('mock');
   const [questions, setQuestions] = useState([]);
   const router = useRouter();
   const [mock, setMock] = useState();
@@ -30,7 +33,7 @@ export default function ExamComponent() {
 
     const fetchQuestions = async () => {
       try {
-        const response = await fetch("/api/mine");
+        const response = await fetch(`/api/mine?mock=${mockId}`);
         if (!response.ok) {
           console.error(`Error fetching questions: ${response.statusText}`);
           return;
@@ -53,7 +56,7 @@ export default function ExamComponent() {
     };
 
     fetchQuestions();
-  }, []);
+  }, [mockId]);
 
   useEffect(() => {
     const timer = setInterval(() => {
