@@ -14,7 +14,7 @@ export default function TogglePopoverLogin({user}){
     if(user.user?.role==='teacher'){
       urll = `/profiles/teachers/${user.user?.name}`
     } else {
-      urll = `/profiles/student/${user.user?.name}`
+      urll = `/profiles/students/${user.user?.name}`
     }
     useEffect(() => {
       const handleClickOutside = (event) => {

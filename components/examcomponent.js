@@ -74,28 +74,34 @@ export default function ExamComponent() {
   }, []);
 
   const handleSubmit = async () => {
-    if (!mock || Object.keys(answers).length === 0) {
-      alert("Please answer at least one question before submitting.");
+    if (!mock || questions.length === 0) {
+      alert("No questions to submit.");
       return;
     }
-
+  
+    // Ensure all questions are included in the answers, even if unanswered
+    const finalAnswers = {};
+    questions.forEach((question) => {
+      finalAnswers[question.questionId] = answers[question.questionId] || ""; // Default to an empty string
+    });
+  
     try {
-      const payload = { mock, answers };
+      const payload = { mock, answers: finalAnswers };
       console.log("Submitting payload:", payload);
-
+  
       const response = await fetch("/api/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         console.error("Error response from API:", errorData);
         alert(`Error submitting answers: ${errorData.message || "Unknown error"}`);
         return;
       }
-
+  
       localStorage.removeItem("examProgress");
       setCurrentQuestionIndex(0);
       setAnswers({});
@@ -108,6 +114,7 @@ export default function ExamComponent() {
       alert("An unexpected error occurred while submitting answers.");
     }
   };
+  
 
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
@@ -134,8 +141,8 @@ export default function ExamComponent() {
           {questions.map((_, index) => {
             let circleColor = "bg-gray-800";
             if (index === currentQuestionIndex) circleColor = "bg-red-700";
-            else if (answers[questions[index]._id]) circleColor = "bg-green-500";
-            else if (markedForReview.includes(questions[index]._id)) circleColor = "bg-purple-500";
+            else if (answers[questions[index].questionId]) circleColor = "bg-green-500";
+            else if (markedForReview.includes(questions[index].questionId)) circleColor = "bg-purple-500";
 
             return (
               <div
@@ -186,30 +193,36 @@ export default function ExamComponent() {
             </button>
             <button
               className={`px-4 py-2 ${
-                markedForReview.includes(currentQuestion?._id)
+                markedForReview.includes(currentQuestion?.questionId)
                   ? "bg-purple-500"
                   : "bg-yellow-500"
               } text-white rounded`}
               onClick={() =>
                 setMarkedForReview((prevMarkedForReview) =>
-                  prevMarkedForReview.includes(currentQuestion._id)
-                    ? prevMarkedForReview.filter((id) => id !== currentQuestion._id)
-                    : [...prevMarkedForReview, currentQuestion._id]
+                  prevMarkedForReview.includes(currentQuestion.questionId)
+                    ? prevMarkedForReview.filter((id) => id !== currentQuestion.questionId)
+                    : [...prevMarkedForReview, currentQuestion.questionId]
                 )
               }
               disabled={isTimerExpired} // Disable if timer expired
             >
-              {markedForReview.includes(currentQuestion?._id)
+              {markedForReview.includes(currentQuestion?.questionId)
                 ? "Unmark for Review"
                 : "Mark for Review"}
             </button>
-            <button
-              className="px-4 py-2 bg-blue-500 text-white rounded"
+            {currentQuestionIndex === questions.length - 1 ? <button
+              className="px-4 py-2 bg-red-800 text-white rounded"
+              onClick={handleSubmit}
+    // Disable if timer expired
+            >
+              Submit Exam
+            </button> : <button
+              className="px-4 py-2 bg-blue-800 text-white rounded"
               onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-              disabled={currentQuestionIndex === questions.length - 1 || isTimerExpired} // Disable if timer expired
+            // Disable if timer expired
             >
               Next Question
-            </button>
+            </button>}
           </div>
         </div>
       </div>
