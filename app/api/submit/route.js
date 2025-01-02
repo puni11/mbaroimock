@@ -41,19 +41,29 @@ export async function POST(req) {
     const mockData = await db.collection('mock').findOne({ _id: new ObjectId(mock) });
     const mockName = mockData.examName
     let collection;
-    let options;
+    let options; 
+    let marks; 
+    let negativemarks;
     if(mockName.toLowerCase().includes("xat")){
       collection= 'xatquestions';
-      options = 'xatoptions'
+      options = 'xatoptions';
+      marks =1;
+      negativemarks = 0.25;
     } else if (mockName.toLowerCase().includes("cat")) {
       collection = "catquestions";
       options = "catoptions";
+      marks =3;
+      negativemarks = 1;
     } else if (mockName.toLowerCase().includes("cmat")) {
       collection = "cmatquestions";
       options = "cmatoptions";
+      marks =4;
+      negativemarks = 1;
     } else if (mockName.toLowerCase().includes("gmat")) {
       collection = "gmatquestions";
       options = "gmatoptions";
+      marks =1;
+      negativemarks = 0;
     }
 
     for (const questionIds in answers) {
@@ -70,26 +80,38 @@ export async function POST(req) {
           if(correctOption.answer === userAnswer){
             results.push({
               questionIds,
-              questionText: question.question, // Assuming the question collection has a `text` field
+              questionText: question.question,
+              subject : question.subject,
+              topics : question.topic, 
+              solution: question.solution,
               userAnswer,
               correctAnswer: correctOption.answer,
-              correct : true // Assuming the `options` collection has a `value` field
+              correct : true, 
+              mark : marks// Assuming the `options` collection has a `value` field
             });
           } else if (userAnswer===''){
             results.push({
               questionIds,
               questionText: question.question, // Assuming the question collection has a `text` field
               userAnswer,
+              subject : question.subject,
+              topics : question.topic,
+              solution: question.solution,
               correctAnswer: correctOption.answer,
-              correct : '' // Assuming the `options` collection has a `value` field
+              correct : '',
+              mark: 0 // Assuming the `options` collection has a `value` field
             });
           } else if (correctOption.answer !== userAnswer){
             results.push({
               questionIds,
               questionText: question.question, // Assuming the question collection has a `text` field
               userAnswer,
+              subject : question.subject,
+              solution: question.solution,
+              topics : question.topic,
               correctAnswer: correctOption.answer,
-              correct : false // Assuming the `options` collection has a `value` field
+              correct : false, 
+              mark : negativemarks // Assuming the `options` collection has a `value` field
             });
           }
        

@@ -15,6 +15,7 @@ export default  function UploadQuestionForm() {
     type: 'mcq',
     options: { a: '', b: '', c: '', d: '', answer: '' },
     para: '',
+    solution: '',
     examName : query
   });
 
@@ -49,7 +50,9 @@ export default  function UploadQuestionForm() {
         level: 'simple',
         type: 'mcq',
         options: { a: '', b: '', c: '', d: '', answer: '' },
+        solution : '',
         para: '',
+        examName : query
       });
     } else if (response.status === 409) {
       setErrormessage("Question Already Exist in Database. Try Adding Other Question")
@@ -95,14 +98,20 @@ export default  function UploadQuestionForm() {
 
           <div>
             <label className="block text-gray-700 font-medium mb-2">Subject</label>
-            <input
-              type="text"
-              name="subject"
-              value={formData.subject}
-              onChange={handleInputChange}
-              className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-200 focus:border-indigo-500"
-              required
-            />
+            <select
+  name="subject"
+  value={formData.subject}
+  onChange={handleInputChange}
+  className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+  required
+>
+  <option value="">Select a Subject</option>
+  <option value="Language Comprehension">Language Comprehension</option>
+  <option value="Quantitative Techniques and Data Interpretation">Quantitative Techniques and Data Interpretation</option>
+  <option value="Logical Reasoning">Logical Reasoning</option>
+  <option value="Innovation & Entrepreneurship">Innovation & Entrepreneurship</option>
+  <option value="General Awareness">General Awareness</option>
+</select>
           </div>
 
           <div>
@@ -251,7 +260,15 @@ export default  function UploadQuestionForm() {
             </div>
             </>
           )}
-
+             <div>
+              <label className="block text-gray-700 font-medium mb-2">Solution</label>
+              <textarea
+                name="solution"
+                value={formData.solution}
+                onChange={handleInputChange}
+                className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-200 focus:border-indigo-500"
+              ></textarea>
+            </div>
           <div>
             <button
               type="submit"

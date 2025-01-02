@@ -13,7 +13,7 @@ export default function ExamComponent() {
   const [answers, setAnswers] = useState({});
   const [markedForReview, setMarkedForReview] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(1 * 60); // 1 minute in seconds
+  const [timeLeft, setTimeLeft] = useState(180 * 60); // 1 minute in seconds
   const [isTimerExpired, setIsTimerExpired] = useState(false); // Track if timer has expired
 
   const loadProgress = () => {
@@ -22,7 +22,7 @@ export default function ExamComponent() {
       setAnswers(savedProgress.answers || {});
       setMarkedForReview(savedProgress.markedForReview || []);
       setCurrentQuestionIndex(savedProgress.currentQuestionIndex || 0);
-      setTimeLeft(savedProgress.timeLeft || 1 * 60);
+      setTimeLeft(savedProgress.timeLeft || 180 * 60);
       return true;
     }
     return false;
@@ -46,7 +46,7 @@ export default function ExamComponent() {
           setCurrentQuestionIndex(0);
           setAnswers({});
           setMarkedForReview([]);
-          setTimeLeft(1 * 60); // Reset timer to initial value
+          setTimeLeft(180 * 60); // Reset timer to initial value
         }
 
         setLoading(false);
@@ -106,7 +106,7 @@ export default function ExamComponent() {
       setCurrentQuestionIndex(0);
       setAnswers({});
       setMarkedForReview([]);
-      setTimeLeft(1 * 60); // Reset timer after submission
+      setTimeLeft(180 * 60); // Reset timer after submission
       alert("Answers submitted successfully!");
       router.push("/");
     } catch (error) {
@@ -137,24 +137,26 @@ export default function ExamComponent() {
 
       {/* Questions Section */}
       <div className="flex gap-40 h-full">
-        <div className="flex gap-2 mb-4">
-          {questions.map((_, index) => {
-            let circleColor = "bg-gray-800";
-            if (index === currentQuestionIndex) circleColor = "bg-red-700";
-            else if (answers[questions[index].questionId]) circleColor = "bg-green-500";
-            else if (markedForReview.includes(questions[index].questionId)) circleColor = "bg-purple-500";
+      <div className="flex flex-wrap gap-2 mb-4 w-1/4 flex-wrap">
+  {questions.map((_, index) => {
+    let circleColor = "bg-gray-800";
+    if (index === currentQuestionIndex) circleColor = "bg-red-700";
+    else if (answers[questions[index].questionId]) circleColor = "bg-green-500";
+    else if (markedForReview.includes(questions[index].questionId)) circleColor = "bg-purple-500";
 
-            return (
-              <div
-                key={index}
-                className={`w-12 h-12 rounded-full flex items-center text-white justify-center ${circleColor} cursor-pointer`}
-                onClick={() => setCurrentQuestionIndex(index)}
-              >
-                {index + 1}
-              </div>
-            );
-          })}
-        </div>
+    return (
+      <div
+        key={index}
+        className={`w-12 h-12 rounded-full flex items-center text-white justify-center ${circleColor} cursor-pointer`}
+        onClick={() => setCurrentQuestionIndex(index)}
+        style={{ flex: "0 0 calc(20% - 0.4rem)" }} // Ensures 5 circles fit in one row
+      >
+        {index + 1}
+      </div>
+    );
+  })}
+</div>
+        <div className="w-3/4">
         <div className="border-2 p-12 rounded">
           {currentQuestion && (
             <div className="mb-4">
@@ -224,6 +226,7 @@ export default function ExamComponent() {
               Next Question
             </button>}
           </div>
+        </div>
         </div>
       </div>
 

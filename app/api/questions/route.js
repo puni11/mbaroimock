@@ -23,7 +23,7 @@ export async function POST(req) {
     
 
     const body = await req.json();
-    const { question, topic, subject, level, type, options, para, examName } = body;
+    const { question, topic, subject, level, type, options, para, solution, examName } = body;
     if (!examName) {
       return new Response(
         JSON.stringify({ message: "Invalid request: Missing exam name" }),
@@ -99,6 +99,8 @@ export async function POST(req) {
       subject,
       level,
       type,
+      solution,
+      para,
       mockId: mock._id,
       createdAt: 'new Date()',
     });
@@ -115,7 +117,7 @@ export async function POST(req) {
         questionId,
         para,
       });
-      await db.collection("options").insertOne({
+      await db.collection(optionsname).insertOne({
         questionId,
         ...options,
       });

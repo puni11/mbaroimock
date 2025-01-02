@@ -1,7 +1,9 @@
 "use client";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
-
+import OverView from "./OverView";
+import TopicWise from "./TopicWise";
+import GraphResult from "./GraphResult";
 export default function ExamResultComponent() {
   const searchParams = useSearchParams();
   const exam = searchParams.get("exam");
@@ -26,13 +28,29 @@ export default function ExamResultComponent() {
     if (exam) fetchResult();
   }, [exam]);
 
-  console.log("Result in render:", result); // Debug log in render
+
+  // Calculate counts for donut chart
 
   return (
-    <div className="container p-4">
-      <h1 className="text-2xl font-bold mb-4">Exam Results</h1>
-      {Array.isArray(result) && result.length > 0 ? ( // Safely check if result is an array
+    <div className="container mx-auto p-4">
+      <h1 className="text-xl mt-2 bg-gray-800 py-2 text-white rounded font-semibold text-center">Exam Performance Overview</h1>
+      <hr class="border-t-2 border-red-800" />
+      {/* Donut Chart */}
+        <div className="flex gap-3">
+            <div className="w-5/12">
+            <OverView data={result} />
+            </div>
+            <div className="w-7/12">
+            <TopicWise data={result}/>
+            </div>
+            
+        </div>
+        
+        <GraphResult data={result}/>
+      
+      {Array.isArray(result) && result.length > 0 ? (
         <div className="overflow-x-auto">
+          <h3 className="text-xl mt-2 bg-gray-800 py-2 text-white rounded font-semibold text-center">Solution of Questions</h3>
           <table className="table-auto w-full border-collapse border border-gray-300">
             <thead>
               <tr className="bg-gray-100">
@@ -40,7 +58,8 @@ export default function ExamResultComponent() {
                 <th className="border border-gray-300 px-4 py-2 text-left">Question</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Your Answer</th>
                 <th className="border border-gray-300 px-4 py-2 text-left">Correct Answer</th>
-                <th className="border border-gray-300 px-4 py-2 text-left">Marks</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Result</th>
+                <th className="border border-gray-300 px-4 py-2 text-left">Solution</th>
               </tr>
             </thead>
             <tbody>
@@ -58,7 +77,16 @@ export default function ExamResultComponent() {
                       item.correct ? "text-green-600" : "text-red-600"
                     }`}
                   >
-                    {item.correct ? "Correct" : "Wrong"}
+                    {item.correct === '' || item.correct === undefined
+                      ? "No Answer"
+                      : item.correct
+                      ? "Correct"
+                      : "Wrong"}
+                  </td>
+                  <td
+                    className='border border-gray-300 px-4 py-2'
+                  >
+                    {item.solution}
                   </td>
                 </tr>
               ))}
