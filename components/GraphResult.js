@@ -4,6 +4,7 @@ import {
   LinearScale,
   BarElement,
   LineElement,
+  LineController, // Add LineController
   PointElement,
   Tooltip,
   Legend,
@@ -15,6 +16,7 @@ ChartJS.register(
   LinearScale,
   BarElement,
   LineElement,
+  LineController, // Register LineController
   PointElement,
   Tooltip,
   Legend
